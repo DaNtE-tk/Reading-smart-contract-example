@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>EO's-Here-we-go</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7/web3.min.js" integrity="sha512-yAmmVkOXqtDZRaueLdmLwMB67JtaRtjFzQGiAiJKvLiFlDvq4Tzm5R6uLcOMyvPRQlXpYHdYxc5IbiCwuquhUw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </head>
+  <body>
+    <div class="jumbotron container">
+      <h1>
+        Welcome to the Event Organizer's home page
+      </h1>
+    </div>
+    <div class="container" align="center">
+      <button class="btn btn-primary" onclick="connectMetaMask()">Connect to MetaMask</button>
+      <br><br>
+      <p id="accountNumber"></p>
+      <br>
+      <button class="btn btn-primary" onclick="connectContract()">Connect to Contractk</button>
+      <br><br>
+      <p id="contractStatus"></p>
+      <br>
+      <button class="btn btn-primary" onclick="readContract()">Read Contract</button>
+      <br><br>
+      <p id="eventName"></p>
+      <p id="eventDate"></p>
+      <p id="ticketPrice"></p>
+      <p id="ticketCount"></p>
+      <p id="ticketRemain"></p>
+    </div>
+
+
+
+
+    <script>
+    // function to connect to meta mask account
+      const connectMetaMask = async ()=>{
+        if(window.ethereum!=="undefined"){
+          const accounts = await ethereum.request({method:"eth_accounts"});
+          let account = accounts[0];
+          document.getElementById("accountNumber").innerHTML=account;
+        }
+      }
+
+      // function to connect to a smart contract
+      const connectContract = async ()=>{
+        const ABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			}
+		],
+		"name": "buyTicket",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "date",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "ticketCount",
+				"type": "uint256"
+			}
+		],
+		"name": "createEvent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			}
+		],
+		"name": "transferTicket",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "eventCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "events",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "organizer",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "date",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "ticketCount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "ticketRemain",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "nextId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "tickets",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+        const Address= "0xe0C8Ca20216407c3e4f03A7DAfb0C32c5e90D3A6";
+        window.web3 = await new Web3(window.ethereum);
+        window.contract = await new window.web3.eth.Contract(ABI,Address);
+        document.getElementById("contractStatus").innerHTML = "Connected to smart contract";
+      }
+
+      // function to read the data inside the smart contract
+      const readContract = async () =>{
+        const count = await window.contract.methods.eventCount().call();
+        console.log(count);
+        const data = await window.contract.methods.events(0).call();
+        // console.log(data);
+        document.getElementById("eventName").innerHTML = data.name;
+        document.getElementById("eventDate").innerHTML = data.date;
+        document.getElementById("ticketPrice").innerHTML = data.price;
+        document.getElementById("ticketCount").innerHTML = data.ticketCount;
+        document.getElementById("ticketRemain").innerHTML = data.ticketRemain;
+
+      }
+    </script>
+  </body>
+</html>
